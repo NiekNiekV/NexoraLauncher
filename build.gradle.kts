@@ -66,7 +66,6 @@ tasks.register<Exec>("buildNexoraSetup") {
             "--vendor", "Nexora",
             "--win-menu",
             "--win-shortcut",
-            "--win-menu", "--win-shortcut"
         )
     }
 }
