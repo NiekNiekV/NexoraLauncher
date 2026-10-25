@@ -68,6 +68,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        System.out.println("NEXORA TEST: start() wordt uitgevoerd!");
+
         // Sidebar
         Label logo = label("NEXORA", 25, RED);
         logo.setStyle("-fx-font-weight: bold;");
@@ -148,6 +150,26 @@ ComboBox<String> mcVersion = new ComboBox<>();
                         "-fx-background-radius: 8;" +
                         "-fx-cursor: hand;"
         );
+
+
+        Label updateStatus = new Label("Updates controleren...");
+
+        updateStatus.setStyle(
+                "-fx-text-fill: #aaaaaa;" +
+                        "-fx-font-size: 12px;"
+        );
+
+
+        Thread updateThread = new Thread(() -> {
+            String result = Updater.checkForUpdates();
+
+            javafx.application.Platform.runLater(() -> {
+                updateStatus.setText(result);
+            });
+        });
+
+        updateThread.setDaemon(true);
+        updateThread.start();
 
 
         Button modsButton = new Button("MODS");
@@ -326,11 +348,13 @@ ComboBox<String> mcVersion = new ComboBox<>();
 
 // DAARNA JE BESTAANDE VBox heroContent
 
+
         VBox heroContent = new VBox(
                 17, eyebrow, heroTitle, heroText,
                 new Region(), versionNumber, mcVersion,
-                play, modsButton, microsoftLogin, status
+                play, updateStatus, microsoftLogin, status
         );
+
 
         heroContent.setPadding(new Insets(30));
         heroContent.setAlignment(Pos.CENTER_LEFT);
@@ -630,7 +654,6 @@ ComboBox<String> mcVersion = new ComboBox<>();
 
 
     public static void main(String[] args) {
-
         launch(args);
     }
 }
